@@ -12,10 +12,10 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            Application
+            E-Zeszyt
           </v-list-item-title>
           <v-list-item-subtitle>
-            subtext
+            Twój wirtualny zeszyt
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -55,9 +55,12 @@ export default {
   data: () => ({
         drawer: null,
         items: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-          { title: 'Photos', icon: 'mdi-image' },
-          { title: 'About', icon: 'mdi-help-box' },
+          { title: 'Strona główna', icon: 'mdi-view-dashboard' },
+          { title: 'Zeszyty', icon: 'mdi-notebook' },
+          { title: 'Podręczniki', icon: 'mdi-book' },
+          { title: 'Czat', icon: 'mdi-forum' },
+          { title: 'Ustawienia', icon: 'mdi-cog' },
+          { title: 'Co to jest?', icon: 'mdi-help-box' },
         ],
         right: null,
   }),
