@@ -26,8 +26,9 @@ app.use(express.static('public'))
 
 database.db_setup();
 
-// Routers
-app.use('/', require('./routers/auth'));
+// API
+app.use('/api/v0.1/login', require('./routers/api/login'));
+app.use('/api/v0.1/register', require('./routers/api/register'));
 
 const activeUsers = new Set();
 
@@ -51,5 +52,5 @@ app.get('*', function(req, res){
 });
 
 http.listen(8081, function() {
-    console.log('APanel listening on 8081')
+    console.log('E-Zeszyt listening on 8081')
 });
