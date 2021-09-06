@@ -1,0 +1,31 @@
+{
+  "name": "ezeszyt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/6Arin9/ezeszyt.git"
+  },
+  "keywords": [],
+  "authors": [
+    "arin",
+    "MarcinK50"
+  ],
+  "license": "Generalnie Najebany Użytkownik",
+  "bugs": {
+    "url": "https://github.com/6Arin9/ezeszyt/issues"
+  },
+  "homepage": "https://github.com/6Arin9/ezeszyt#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.2.0"
+  }
+}
