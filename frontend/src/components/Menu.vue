@@ -29,7 +29,7 @@
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          link
+          :to="item.link"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -51,12 +51,12 @@ export default {
   data: () => ({
         drawer: null,
         items: [
-          { title: 'Strona główna', icon: 'mdi-view-dashboard' },
-          { title: 'Zeszyty', icon: 'mdi-notebook' },
-          { title: 'Podręczniki', icon: 'mdi-book' },
-          { title: 'Czat', icon: 'mdi-forum' },
-          { title: 'Ustawienia', icon: 'mdi-cog' },
-          { title: 'Co to jest?', icon: 'mdi-help-box' },
+          { title: 'Strona główna', icon: 'mdi-view-dashboard', link: '/' },
+          { title: 'Zeszyty', icon: 'mdi-notebook', link: '/notebooks' },
+          { title: 'Podręczniki', icon: 'mdi-book', link: '/books'},
+          { title: 'Czat', icon: 'mdi-forum', link: '/chat' },
+          { title: 'Ustawienia', icon: 'mdi-cog', link: '/settings' },
+          { title: 'Co to jest?', icon: 'mdi-help-box', link: '/faq' },
         ],
         right: null,
   }),
