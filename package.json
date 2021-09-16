@@ -26,6 +26,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "http": "^0.0.1-security",
+    "sequelize": "^6.6.5",
     "socket.io": "^4.2.0"
   }
 }
