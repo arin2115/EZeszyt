@@ -4,7 +4,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require("body-parser");
 var helpers = require('./helpers');
-var config = require('./config');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var database = require('./db/manager');
@@ -51,6 +50,6 @@ app.get('*', function(req, res){
     res.render('error', { session: req.session, config: config });
 });
 
-http.listen(8081, function() {
-    console.log('E-Zeszyt listening on 8081')
+http.listen(6001, function() {
+    console.log('E-Zeszyt listening on 6001')
 });
