@@ -1,4 +1,4 @@
-# frontend
+# EZeszyt - Frontend
 
 ## Project setup
 ```
