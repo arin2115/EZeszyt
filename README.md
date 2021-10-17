@@ -1,1 +1,1 @@
-# ezeszyt
+# EZeszyt - Twój wirtualny zeszyt.
