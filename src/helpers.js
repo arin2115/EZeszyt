@@ -1,41 +1,82 @@
-var User = require('./db/manager').User;
-// const crypto = require('crypto');
+const codes = require('./error-codes');
+const config = require('./config');
+const route = `/api/v${config.version}`
+const fetch = require('node-fetch');
 
-async function isLogged(session) {
-    // if (!session.logged) return false;
-    // if (!session.logged || !session.username || !session.password) return false;
-    // var username_res = session.username;
-    // if (!username_res) return false;
-    // var password_hash = await hash(session.password);
-    // var userinfo = await User.findAll({
-    //     where: {
-    //         username: session.username
-    //     }
-    // });
-    // userinfo = JSON.parse(JSON.stringify(userinfo, null, 2))[0];
+function makeid(length, type) {
+    var result = '';
+    var characters;
+    if (type == "normal" || type == "default") characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    if (type == "number" || type == "numonly") characters = '0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
 
-    // var password_res = userinfo ? userinfo.password : null;
-    // if (!password_res) return false;
-    // if (password_res == password_hash) return true;
-    // return false;
+    return result;
 }
 
-// async function generateSalt() {
-//     var rounds = 12;
-//     return crypto.randomBytes(Math.ceil(rounds / 2)).toString('hex').slice(0, rounds);
-// };
+function verifyCaptcha(code) {
+    fetch("https://www.google.com/recaptcha/api/siteverify?secret=" + config.captcha.secret + "&response=" + code).then(res => res.json())
+    .then(json => {
+        if (json.success) return true;
+        return false;
+    })
+}
 
-// async function hash(plain) {
-//     let hash = crypto.createHmac('sha512', "");
-//     hash.update(plain);
-//     let value = hash.digest('hex');
-//     return value;
-// }
+class Error {
+    constructor() {
+        return codes.getCodesArray();
+    }
+}
 
-// async function compare(plain, hashed) {
-//     var plainhash = await hash(plain);
-//     if (plainhash == hashed) return true;
-//     return false;
-// }
+class ErrorResponse {
+    constructor(code, reason) {
+        return {
+            "success": false,
+            "errors": [
+                {
+                    "code": code,
+                    "reason": reason
+                }
+            ]
+        }
+    }
+}
 
-module.exports = { isLogged }
+class Response {
+    constructor(data) {
+        return {
+            "success": true,
+            "data": data
+        }
+    }
+}
+
+class Endpoints {
+    constructor(app) {
+        this.app = app;
+    }
+
+    add(endpoints) {
+        endpoints.forEach(endpoint => {
+            this.app.use(`${route}/${endpoint.path}`, require('./endpoints/' + endpoint.file + '.js'));
+        })
+    }
+}
+
+function get_headers(request) {
+    if (
+        !request.headers['content-type'] || 
+        !request.headers['user-agent'] || 
+        !request.headers['timestamp']
+    ) throw 'Some required request headers not found.';
+
+    return headers = {
+        'Content-Type': request.headers['content-type'],
+        'User-Agent': request.headers['user-agent'],
+        'Timestamp': request.headers['timestamp']
+    } 
+}
+
+module.exports = { makeid, Endpoints, Response, Error, ErrorResponse, get_headers, verifyCaptcha }

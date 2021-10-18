@@ -4,7 +4,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require("body-parser");
 var helpers = require('./helpers');
-var config = require('./config');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var database = require('./db/manager');
@@ -26,8 +25,9 @@ app.use(express.static('public'))
 
 database.db_setup();
 
-// Routers
-app.use('/', require('./routers/auth'));
+// API
+app.use('/api/v0.1/login', require('./routers/api/login'));
+app.use('/api/v0.1/register', require('./routers/api/register'));
 
 const activeUsers = new Set();
 
@@ -50,6 +50,6 @@ app.get('*', function(req, res){
     res.render('error', { session: req.session, config: config });
 });
 
-http.listen(8081, function() {
-    console.log('APanel listening on 8081')
+http.listen(6001, function() {
+    console.log('E-Zeszyt listening on 6001')
 });
