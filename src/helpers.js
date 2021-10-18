@@ -1,6 +1,7 @@
 const codes = require('./error-codes');
 const config = require('./config');
 const route = `/api/v${config.version}`
+const fetch = require('node-fetch');
 
 function makeid(length, type) {
     var result = '';
@@ -13,6 +14,14 @@ function makeid(length, type) {
     }
 
     return result;
+}
+
+function verifyCaptcha(code) {
+    fetch("https://www.google.com/recaptcha/api/siteverify?secret=" + config.captcha.secret + "&response=" + code).then(res => res.json())
+    .then(json => {
+        if (json.success) return true;
+        return false;
+    })
 }
 
 class Error {
@@ -70,4 +79,4 @@ function get_headers(request) {
     } 
 }
 
-module.exports = { makeid, Endpoints, Response, Error, ErrorResponse, get_headers }
+module.exports = { makeid, Endpoints, Response, Error, ErrorResponse, get_headers, verifyCaptcha }
