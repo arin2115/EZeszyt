@@ -17,7 +17,7 @@ router.post('/', async function(req, res, next) {
         return res.status(400).json(new ErrorResponse(Error.InvalidHeaders, "Some required request headers not found."));
     }
 
-    var logged = req.session.logged;
+    var logged = false;
     if (logged) {
         var userinfo = await User.findAll({
             where: {
@@ -36,26 +36,32 @@ router.post('/', async function(req, res, next) {
         return res.status(200).json(new Response({ session: req.session }));
     }
 
-    if (!req.body.username || !req.body.password) return res.status(400).json({"success": false, "errors": [{"message": "Bad Request"}]});
+    if (!req.body.username || !req.body.email || !req.body.password || !req.body.repeatpassword || !req.body["g-recaptcha"]) return res.status(400).json({"success": false, "errors": [{"message": "Bad Request"}]});
+    if (req.body.password != req.body.repeatpassword) return res.status(400).json(new ErrorResponse(Error.InvalidRepeatPassword, "RepeatPassword is invalid."));
+    if (!utils.verifyCaptcha(req.body["g-recaptcha"])) return res.status(400).json(new ErrorResponse(Error.InvalidCaptcha, "Invalid Captcha."));
     var userinfo = await User.findAll({
         where: {
             username: req.body.username
         }
     });
     userinfo = JSON.parse(JSON.stringify(userinfo, null, 2))[0];
-    if (!userinfo) return res.status(400).json(new ErrorResponse(Error.InvalidPassword, "Password is invalid."));
-    var pass_db = userinfo.password;
-    if (!pass_db) return res.status(400).json(new ErrorResponse(Error.InvalidPassword, "Password is invalid."));
-    bcrypt.compare(req.body.password, pass_db, function(err, result) {
-        if (result) {
+    if (!userinfo) {
+        bcrypt.hash(req.body.password, 10, function(err, hash) {
+            User.create({
+                "username": req.body.username,
+                "email": req.body.email,
+                "password": hash,
+                "createdAt": Math.floor(Date.now() / 1000)
+            })
+    
             req.session.logged = true;
             req.session.username = req.body.username;
             req.session.password = req.body.password;
-            return res.status(200).json(new Response({ session: req.session }));
-        } else {
-            return res.status(400).json(new ErrorResponse(Error.InvalidPassword, "Password is invalid."));
-        }
-    })
+            return res.status(200).json(new Response({}));
+        })
+    } else {
+        return res.status(400).json(new ErrorResponse(Error.UsernameUsed, "Username is already used."));
+    };
 
 });
 
