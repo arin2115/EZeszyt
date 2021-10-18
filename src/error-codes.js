@@ -1,7 +1,9 @@
 var codesEnum = createEnum([
     // Register
     "InvalidUsername",
-    "InvalidRepeatPassword", 
+    "InvalidRepeatPassword",
+    "UsernameUsed",
+    "InvalidCaptcha",
 
     // Login
     "InvalidPassword",
